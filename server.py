@@ -62,11 +62,13 @@ def create_app(config):
         if placesRequired > 12:
             flash('You can only book up to 12 places')
             return render_template('welcome.html', club=club,
-                                   competitions=competitions)
+                                   competitions=competitions,
+                                   time=current_time)
         if placesRequired > int(club['points']):
             flash('Not enough points')
             return render_template('welcome.html', club=club,
-                                   competitions=competitions)
+                                   competitions=competitions,
+                                   time=current_time)
 
         competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
         club['points'] = int(club['points']) - placesRequired
