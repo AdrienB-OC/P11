@@ -2,9 +2,12 @@ def test_comp_places_update(client):
     resp = client.get('/points')
 
     assert resp.status_code == 200
-    assert b"Simply Lift : 13" in resp.data
-    assert b"Iron Temple : 4" in resp.data
-    assert b"She Lifts : 12" in resp.data
+    assert b"<td>Simply Lift</td>\n                    <td>13</td>" \
+           in resp.data
+    assert b"<td>Iron Temple</td>\n                    <td>4</td>" \
+           in resp.data
+    assert b"<td>She Lifts</td>\n                    <td>12</td>" \
+           in resp.data
 
     response = client.post('/showSummary',
                            data={"email": "john@simplylift.co"})
@@ -37,6 +40,9 @@ def test_comp_places_update(client):
     response_5 = client.get('/points')
 
     assert response_5.status_code == 200
-    assert b"Simply Lift : 10" in response_5.data
-    assert b"Iron Temple : 4" in response_5.data
-    assert b"She Lifts : 12" in response_5.data
+    assert b"<td>Simply Lift</td>\n                    <td>10</td>" \
+           in response_5.data
+    assert b"<td>Iron Temple</td>\n                    <td>4</td>" \
+           in response_5.data
+    assert b"<td>She Lifts</td>\n                    <td>12</td>" \
+           in response_5.data
