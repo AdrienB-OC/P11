@@ -1,5 +1,6 @@
 import json
 from flask import Flask,render_template,request,redirect,flash,url_for
+from datetime import datetime
 
 
 def loadClubs():
@@ -20,6 +21,7 @@ def create_app(config):
     app.config.from_object(config)
     competitions = loadCompetitions()
     clubs = loadClubs()
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     @app.route('/')
     def index():
@@ -28,7 +30,8 @@ def create_app(config):
     @app.route('/showSummary',methods=['POST'])
     def showSummary():
         club = [club for club in clubs if club['email'] == request.form['email']][0]
-        return render_template('welcome.html',club=club,competitions=competitions)
+        return render_template('welcome.html',club=club,competitions=competitions,
+                                   time=current_time)
 
 
     @app.route('/book/<competition>/<club>')
@@ -39,7 +42,8 @@ def create_app(config):
             return render_template('booking.html',club=foundClub,competition=foundCompetition)
         else:
             flash("Something went wrong-please try again")
-            return render_template('welcome.html', club=club, competitions=competitions)
+            return render_template('welcome.html', club=club, competitions=competitions,
+                                   time=current_time)
 
 
     @app.route('/purchasePlaces',methods=['POST'])
@@ -50,7 +54,8 @@ def create_app(config):
 
         competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
         flash('Great-booking complete!')
-        return render_template('welcome.html', club=club, competitions=competitions)
+        return render_template('welcome.html', club=club, competitions=competitions,
+                                   time=current_time)
 
 
     # TODO: Add route for points display
