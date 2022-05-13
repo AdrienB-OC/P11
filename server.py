@@ -15,6 +15,30 @@ def loadCompetitions():
          return listOfCompetitions
 
 
+def edit_club(club_data):
+    clubs_dict = {}
+    with open('clubs') as c:
+        clubs = json.load(c)['clubs']
+        for club in clubs:
+            if club['email'] == club_data['email']:
+                club['points'] = club_data['points']
+    with open('clubs', 'w') as c:
+        clubs_dict['clubs'] = clubs
+        json.dump(clubs_dict, c, indent=4)
+
+
+def edit_competition(competition_data):
+    comps_dict = {}
+    with open('competitions') as c:
+        comps = json.load(c)['competitions']
+        for comp in comps:
+            if comp['name'] == competition_data['name']:
+                comp['numberOfPlaces'] = competition_data['numberOfPlaces']
+    with open('competitions', 'w') as c:
+        comps_dict['competitions'] = comps
+        json.dump(comps_dict, c, indent=4)
+
+
 def create_app(config):
     app = Flask(__name__)
     app.secret_key = 'something_special'
@@ -79,6 +103,11 @@ def create_app(config):
 
         competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
         club['points'] = int(club['points']) - placesRequired
+        competition['numberOfPlaces'] = str(competition['numberOfPlaces'])
+        club['points'] = str(club['points'])
+        # Remove commentary to update JSON DB files when executing
+        # edit_club(club)
+        # edit_competition(competition)
         flash('Great-booking complete!')
         return render_template('welcome.html', club=club, competitions=competitions,
                                    time=current_time)
