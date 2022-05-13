@@ -1,0 +1,10 @@
+venv
+bin
+include
+lib
+.Python
+tests/
+.envrc
+__pycache__
+.coverage
+.pytest_cache
