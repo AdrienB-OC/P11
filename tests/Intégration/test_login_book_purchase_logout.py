@@ -22,7 +22,7 @@ def test_comp_places_update(client):
 
     assert b'Great-booking complete!' in response_3.data
     assert b'Number of Places: 10' in response_3.data
-    assert b'Points available: 10' in response_3.data
+    assert b'Points available: 4' in response_3.data
 
     response_4 = client.get('/logout')
     assert response_4.status_code == 302

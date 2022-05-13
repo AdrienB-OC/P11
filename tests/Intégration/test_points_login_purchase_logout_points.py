@@ -32,7 +32,7 @@ def test_comp_places_update(client):
 
     assert b'Great-booking complete!' in response_3.data
     assert b'Number of Places: 10' in response_3.data
-    assert b'Points available: 10' in response_3.data
+    assert b'Points available: 4' in response_3.data
 
     response_4 = client.get('/logout')
     assert response_4.status_code == 302
@@ -40,7 +40,7 @@ def test_comp_places_update(client):
     response_5 = client.get('/points')
 
     assert response_5.status_code == 200
-    assert b"<td>Simply Lift</td>\n                    <td>10</td>" \
+    assert b"<td>Simply Lift</td>\n                    <td>4</td>" \
            in response_5.data
     assert b"<td>Iron Temple</td>\n                    <td>4</td>" \
            in response_5.data

@@ -95,14 +95,14 @@ def create_app(config):
             return render_template('welcome.html', club=club,
                                    competitions=competitions,
                                    time=current_time)
-        if placesRequired > int(club['points']):
+        if (placesRequired * 3) > int(club['points']):
             flash('Not enough points')
             return render_template('welcome.html', club=club,
                                    competitions=competitions,
                                    time=current_time)
 
         competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-        club['points'] = int(club['points']) - placesRequired
+        club['points'] = int(club['points']) - (placesRequired * 3)
         competition['numberOfPlaces'] = str(competition['numberOfPlaces'])
         club['points'] = str(club['points'])
         # Remove commentary to update JSON DB files when executing

@@ -20,5 +20,5 @@ def test_comp_places_update(client):
                                    "places": "3"})
 
     assert b'Great-booking complete!' in response_3.data
-    assert b'Points available: 10' in response_3.data
+    assert b'Points available: 4' in response_3.data
 
