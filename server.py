@@ -1,18 +1,18 @@
 import json
-from flask import Flask,render_template,request,redirect,flash,url_for
+from flask import Flask, render_template, request, redirect, flash, url_for
 from datetime import datetime
 
 
-def loadClubs():
+def load_clubs():
     with open('clubs.json') as c:
-         listOfClubs = json.load(c)['clubs']
-         return listOfClubs
+        list_of_clubs = json.load(c)['clubs']
+        return list_of_clubs
 
 
-def loadCompetitions():
+def load_competitions():
     with open('competitions.json') as comps:
-         listOfCompetitions = json.load(comps)['competitions']
-         return listOfCompetitions
+        list_of_competitions = json.load(comps)['competitions']
+        return list_of_competitions
 
 
 def edit_club(club_data):
@@ -43,16 +43,16 @@ def create_app(config):
     app = Flask(__name__)
     app.secret_key = 'something_special'
     app.config.from_object(config)
-    competitions = loadCompetitions()
-    clubs = loadClubs()
+    competitions = load_competitions()
+    clubs = load_clubs()
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     @app.route('/')
     def index():
         return render_template('index.html')
 
-    @app.route('/showSummary',methods=['POST'])
-    def showSummary():
+    @app.route('/showSummary', methods=['POST'])
+    def show_summary():
         try:
             club = [club for club in clubs
                     if club['email'] == request.form['email']][0]
@@ -63,66 +63,64 @@ def create_app(config):
             flash("Error : Unregistered email")
             return render_template('index.html')
 
-
     @app.route('/book/<competition>/<club>')
-    def book(competition,club):
+    def book(competition, club):
         try:
-            foundClub = [c for c in clubs if c['name'] == club][0]
-            foundCompetition = [c for c in competitions
-                                if c['name'] == competition][0]
+            found_club = [c for c in clubs if c['name'] == club][0]
+            found_competition = [c for c in competitions
+                                 if c['name'] == competition][0]
         except IndexError:
-            foundClub = None
-            foundCompetition = None
+            found_club = None
+            found_competition = None
 
-        if foundClub and foundCompetition:
-            if foundCompetition['date'] < current_time:
+        if found_club and found_competition:
+            if found_competition['date'] < current_time:
                 flash('You can not book places for a competition that has '
                       'already finished')
                 return render_template('welcome.html', club=club,
                                        competitions=competitions,
                                        time=current_time)
-            return render_template('booking.html', club=foundClub,
-                                   competition=foundCompetition)
+            return render_template('booking.html', club=found_club,
+                                   competition=found_competition)
         else:
             flash("Something went wrong-please try again")
             return render_template('welcome.html', club=club,
                                    competitions=competitions,
                                    time=current_time)
 
-
-    @app.route('/purchasePlaces',methods=['POST'])
-    def purchasePlaces():
+    @app.route('/purchasePlaces', methods=['POST'])
+    def purchase_places():
         competition = [c for c in competitions
                        if c['name'] == request.form['competition']][0]
         club = [c for c in clubs if c['name'] == request.form['club']][0]
-        placesRequired = int(request.form['places'])
+        places_required = int(request.form['places'])
 
-        if placesRequired > 12:
+        if places_required > 12:
             flash('You can only book up to 12 places')
             return render_template('welcome.html', club=club,
                                    competitions=competitions,
                                    time=current_time)
-        if (placesRequired * 3) > int(club['points']):
+        if (places_required * 3) > int(club['points']):
             flash('Not enough points')
             return render_template('welcome.html', club=club,
                                    competitions=competitions,
                                    time=current_time)
 
-        competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-        club['points'] = int(club['points']) - (placesRequired * 3)
+        competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - \
+            places_required
+        club['points'] = int(club['points']) - (places_required * 3)
         competition['numberOfPlaces'] = str(competition['numberOfPlaces'])
         club['points'] = str(club['points'])
         # Remove commentary to update JSON DB files when executing
         # edit_club(club)
         # edit_competition(competition)
         flash('Great-booking complete!')
-        return render_template('welcome.html', club=club, competitions=competitions,
-                                   time=current_time)
+        return render_template('welcome.html', club=club,
+                               competitions=competitions, time=current_time)
 
     @app.route('/points')
     def points_display():
         return render_template('points.html', clubs=clubs)
-
 
     @app.route('/logout')
     def logout():

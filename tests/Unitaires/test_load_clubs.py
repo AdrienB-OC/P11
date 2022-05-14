@@ -1,4 +1,4 @@
-from server import loadClubs
+from server import load_clubs
 
 
 expected = [
@@ -8,4 +8,4 @@ expected = [
 
 
 def test_load_clubs():
-    assert loadClubs() == expected
+    assert load_clubs() == expected

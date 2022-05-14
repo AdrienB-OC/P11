@@ -25,4 +25,3 @@ def test_purchase_error_places(client):
 
     assert b'Great-booking complete!' not in response.data
     assert response.status_code == 200
-

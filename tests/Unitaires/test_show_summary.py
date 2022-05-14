@@ -14,5 +14,3 @@ def test_summary_invalid_email(client):
 
     assert response.status_code == 200
     assert b"Error : Unregistered email" in response.data
-
-

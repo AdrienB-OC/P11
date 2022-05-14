@@ -1,4 +1,4 @@
-from server import loadCompetitions
+from server import load_competitions
 
 
 expected = [
@@ -8,4 +8,4 @@ expected = [
 
 
 def test_load_competitions():
-    assert loadCompetitions() == expected
+    assert load_competitions() == expected
