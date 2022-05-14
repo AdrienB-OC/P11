@@ -73,7 +73,14 @@ def create_app(config):
         except IndexError:
             foundClub = None
             foundCompetition = None
+
         if foundClub and foundCompetition:
+            if foundCompetition['date'] < current_time:
+                flash('You can not book places for a competition that has '
+                      'already finished')
+                return render_template('welcome.html', club=club,
+                                       competitions=competitions,
+                                       time=current_time)
             return render_template('booking.html', club=foundClub,
                                    competition=foundCompetition)
         else:
